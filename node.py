@@ -23,12 +23,12 @@ def next_block(last_block):
     _timestamp = datetime.datetime.now()
     _data = "block #" + str(index)
     _hash = last_block.hash
-    return Block(index=_index, timestamp=_timestamp, data=_data, hash=_hash)
+    return Block(index=_index, timestamp=_timestamp, data=_data, previous_hash=_hash)
 
 def proof_of_work(last_proof):
     # hyper basic PoW.
     incrementor = last_proof + 1
-    while not ( (incrementor % 200 == 0) and (incrementor % last_proof == 0) ):
+    while not ( (incrementor % 20000 == 0) and (incrementor % last_proof == 0) ):
         incrementor += 1
     return incrementor
 
@@ -36,11 +36,15 @@ def proof_of_work(last_proof):
 def transaction():
     if request.method == 'POST':
         new_transaction = request.get_json()
-        this_nodes_transactionsa.append(new_transaction)
-        return 'transaction successful\n'
+        this_nodes_transactions.append(new_transaction)
+        print("FROM: {}".format(new_transaction['from'].encode('ascii','replace')))
+        print("TO: {}".format(new_transaction['to'].encode('ascii','replace')))
+        print("AMOUNT: {}\n".format(new_transaction['amount']))
+        return '~ transaction successful ~'
 
 @node.route('/mine', methods=['GET'])
 def mine():
+    global this_nodes_transactions
     # retrieve the last PoW
     last_block = blockchain[len(blockchain) - 1]
     last_proof = last_block.data['proof_of_work']
@@ -55,7 +59,7 @@ def mine():
     _hash = last_block.hash
     # empty transaction list
     this_nodes_transactions = []
-    mined_block = Block(index=_index, timestamp=_timestamp, data=_data, hash=_hash)
+    mined_block = Block(index=_index, timestamp=_timestamp, data=_data, previous_hash=_hash)
     blockchain.append(mined_block)
     # inform client of mining's completion
     return json.dumps(
@@ -102,4 +106,4 @@ def consensus():
     # longest chain wins!
     blockchain = longest_chain
 
-node.run()
+node.run(host='0.0.0.0', port=80, threaded=True, debug=False)

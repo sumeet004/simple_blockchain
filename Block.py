@@ -21,4 +21,4 @@ class Block:
         return sha.hexdigest()
 
 def create_initial_block():
-    return Block(index=0, timestamp=datetime.datetime.now(), data='initial block', previous_hash='0')
+    return Block(index=0, timestamp=datetime.datetime.now(), data={'note':'initial block','proof_of_work':1}, previous_hash='0')
