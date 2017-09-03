@@ -1,4 +1,5 @@
 import hashlib
+import datetime
 
 class Block:
     def __init__(self, index, timestamp, data, previous_hash):
@@ -18,3 +19,6 @@ class Block:
             str(self.previous_hash).encode('utf-8')
             )
         return sha.hexdigest()
+
+def create_initial_block():
+    return Block(index=0, timestamp=datetime.datetime.now(), data='initial block', previous_hash='0')
