@@ -8,7 +8,7 @@ This repo was inspired by [Satoshi Nakamoto's blockchain whitepaper](https://bit
 ### Implementation
 
 #### Blocks!
-A block is an object that contains, in this implementation, a series of transactional data. All previous transactions are available in a public ledger called the blockchain. A blockchain is a sequence of blocks available for inspection. Thus the integrity of the whole system can be determined to be valid by verifying all blocks in reverse chronological order all the way back to the first created block. The validity of the blocks is determined by using a Proof of Work algorithm. More on that later.
+A block is an object that contains, in this implementation, a series of transactional data. All previous transactions are available in a public ledger called the blockchain. A blockchain is a sequence of blocks available for inspection. Thus the integrity of the whole system can be determined to be secure by using a mathematical function to confirm the validity of each block all the way back to the first block. The validity of the blocks is determined by using a Proof of Work algorithm. More on that later.
 
 #### Nodes
 Upon startup, nodes check for peers and their respective blockchains. If no peers are found, an initial block is created.
