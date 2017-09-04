@@ -18,8 +18,10 @@ Mining from a node is a transactional relationship where the miner is rewarded f
 
 To retrieve the existing blockchain from a node:
 ```bash
-curl -X GET -H "Content-Type: application/json" http://localhost:80/blocks```
+curl -X GET -H "Content-Type: application/json" http://localhost:80/blocks
+```
 
 To run the mining process and generate Blocks:
 ```bash
-curl -X GET -H "Content-Type: application/json" http://localhost:80/mine```
+curl -X GET -H "Content-Type: application/json" http://localhost:80/mine
+```
