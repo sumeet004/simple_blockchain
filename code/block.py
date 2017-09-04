@@ -11,7 +11,6 @@ class Block:
         self.hash = self.hash_block()
 
     def hash_block(self):
-        # basic hashing
         sha = hashlib.sha256()
         sha.update(
             str(self.index).encode('utf-8') +
