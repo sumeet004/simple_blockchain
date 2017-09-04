@@ -34,5 +34,4 @@ def get_blocks():
             chain_to_send += json_block
     return chain_to_send
 
-blockchain = [create_initial_block()]
 parent.run(host='0.0.0.0', port=90, threaded=True, debug=False)

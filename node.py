@@ -11,37 +11,30 @@ node = Flask(__name__)
 
 # node-specific data
 this_nodes_transactions = []
+PORT = 80
 peer_nodes = ["http://localhost:90"]
-
-# mining boolean
-miner_address = 'http://localhost:80'
+miner_address = 'http://localhost:' + str(PORT)
 
 def startup():
     global blockchain
     blockchain = consensus()
 
-def proof_of_work(block):
-    last_proof = block.data['proof_of_work']
-    block_hash = block.hash
+def proof_of_work(previous_hash):
     # check hash validity
-    sha = hashlib.sha256()
-    sha.update(
-        str(block.index).encode('utf-8') +
-        str(block.timestamp).encode('utf-8') +
-        str(block.data).encode('utf-8') +
-        str(block.previous_hash).encode('utf-8') +
-        str(block.nonce).encode('utf-8')
-        )
-    if block_hash == sha.hexdigest():
-        return b
-
-
-
-    # hyper basic PoW.
-    incrementor = last_proof + 1
-    while not ( (incrementor % 20000 == 0) and (incrementor % last_proof == 0) ):
-        incrementor += 1
-    return incrementor
+    nonce = None
+    incrementor = 0
+    while not nonce:
+        sha = hashlib.sha256()
+        sha.update(
+            str(previous_hash).encode('utf-8') +
+            str(incrementor).encode('utf-8')
+            )
+        challenge_hash = sha.hexdigest()
+        if str(challenge_hash[:5]) == '00000':
+            nonce = incrementor
+        else:
+            incrementor += 1
+    return nonce
 
 @node.route('/transaction', methods=['POST'])
 def transaction():
@@ -70,57 +63,36 @@ def mine():
     # retrieve the last PoW
     last_block = blockchain[len(blockchain) - 1]
     # PoW
-    proof = proof_of_work(last_block)
-
-    new_hash = x
-
+    _previous_hash = last_block['hash']
+    _nonce = proof_of_work(_previous_hash)
     # reward miner
-    this_nodes_transactions.append( {"from":"network", "to":miner_address,
-        "amount":1} )
+    this_nodes_transactions.append( {'from':'network', 'to':miner_address,
+        'amount':1} )
     # generate new block's data
-    _data = {"proof_of_work":proof, "transactions":this_nodes_transactions}
-    _index = last_block.index + 1
-    _timestamp = datetime.datetime.now()
-    _hash = last_block.hash
-    _nonce = last_block.nonce
+    _data = {'transactions':this_nodes_transactions}
+    _index = int(last_block['index']) + 1
+    _timestamp = str(datetime.datetime.now())
     # empty transaction list
     this_nodes_transactions = []
     mined_block = Block(index=_index, timestamp=_timestamp, data=_data,
-        previous_hash=_hash, nonce=_nonce)
-    blockchain.append(mined_block)
+        previous_hash=_previous_hash, nonce=_nonce)
+
+    mined_block_data = {'index':mined_block.index,
+        'timestamp':mined_block.timestamp,
+        'data':mined_block.data,
+        'nonce':mined_block.nonce,
+        'previous_hash':mined_block.previous_hash,
+        'hash':mined_block.hash}
+
+    blockchain.append(mined_block_data)
+
     # inform client of mining's completion
-    return json.dumps(
-        {"index":_index,
-        "timestamp":str(_timestamp),
-        "data":_data,
-        "last_block_hash":_hash} )
+    return json.dumps(mined_block_data)
 
 
 @node.route('/blocks', methods=['GET'])
 def get_blocks():
-    # retrieve this node's copy of the blockchain to return
-    this_nodes_blockchain = blockchain
-    # create empty JSON string to return to client
-    chain_to_send = ""
-    for i in range( len(this_nodes_blockchain) ):
-        block = this_nodes_blockchain[i]
-        block_index = str(block.index)
-        block_timestamp = str(block.timestamp)
-        block_data = str(block.data)
-        block_hash = block.hash
-        block = {
-          "index": block_index,
-          "timestamp": block_timestamp,
-          "data": block_data,
-          "hash": block_hash
-        }
-        # add block to response
-        json_block = json.dumps(block)
-        if chain_to_send == "":
-            chain_to_send = json_block
-        else:
-            chain_to_send += json_block
-    return chain_to_send
+     return json.dumps(blockchain)
 
 def find_new_chains():
     """
@@ -129,6 +101,7 @@ def find_new_chains():
     Except
         ConnectionError : on request failure
     """
+    global peer_nodes
     # retrieve other nodes' blockchains
     other_chains = []
     for node_url in peer_nodes:
@@ -153,5 +126,18 @@ def consensus():
     return longest_chain
 
 startup()
-print(blockchain)
-node.run(host='0.0.0.0', port=80, threaded=True, debug=False)
+if not blockchain:
+    def create_initial_block():
+        b = Block(index=0, timestamp=str(datetime.datetime.now()),
+            data={'note':'initial block','proof_of_work':1},
+            previous_hash='0', nonce=1)
+
+        return {'index':b.index,
+            'timestamp':b.timestamp,
+            'data':b.data,
+            'nonce':b.nonce,
+            'previous_hash':b.previous_hash,
+            'hash':b.hash}
+
+    blockchain = [create_initial_block()]
+node.run(host='0.0.0.0', port=PORT, threaded=True, debug=False)
