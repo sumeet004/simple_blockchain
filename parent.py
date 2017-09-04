@@ -12,7 +12,7 @@ def create_initial_block():
 def get_blocks():
     # retrieve this node's copy of the blockchain to return
     this_nodes_blockchain = blockchain
-    # create empty JSON string to return to client
+    # create empty JSON string
     chain_to_send = ""
     for i in range( len(this_nodes_blockchain) ):
         block = this_nodes_blockchain[i]
