@@ -7,6 +7,9 @@ This repo was inspired by [Satoshi Nakamoto's blockchain whitepaper](https://bit
 
 ### Implementation
 
+#### Blocks!
+A block is an object that contains, in this implementation, a series of transactional data. All previous transactions are available in a public ledger called the blockchain. A blockchain is a sequence of blocks available for inspection. Thus the integrity of the whole system can be determined to be valid by verifying all blocks in reverse chronological order all the way back to the first created block. The validity of the blocks is determined by using a Proof of Work algorithm. More on that later.
+
 #### Nodes
 Upon startup, nodes check for peers and their respective blockchains. If no peers are found, an initial block is created.
 
@@ -44,7 +47,7 @@ curl -X POST -H "Content-Type: application/json" -d "{'to':'you',
 
 I plan to learn much more about the fundamentals of blockchain by way of implementation. This repo began as a side project in a private repository. After making some initial headway, I figured some people may be interested in Python blockchains.
 
-Constructive criticism and questions are welcomed! This implementation is far from perfect; I will be refactoring and optimizing as time allows. 
+Constructive criticism and questions are welcomed! This implementation is far from perfect; I will be refactoring and optimizing as time allows.
 
 Aside from built-in Python packages, such as `json`, this implementation requires:
 - flask
