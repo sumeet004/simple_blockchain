@@ -35,6 +35,7 @@ def proof_of_work(last_proof):
 @node.route('/transaction', methods=['POST'])
 def transaction():
     if request.method == 'POST':
+        global this_nodes_transactions
         new_transaction = request.get_json()
         this_nodes_transactions.append(new_transaction)
         print("FROM: {}".format(new_transaction['from'].encode('ascii','replace')))
@@ -45,6 +46,7 @@ def transaction():
 @node.route('/mine', methods=['GET'])
 def mine():
     global this_nodes_transactions
+    global blockchain
     # retrieve the last PoW
     last_block = blockchain[len(blockchain) - 1]
     last_proof = last_block.data['proof_of_work']
@@ -71,6 +73,7 @@ def mine():
 
 @node.route('/blocks', methods=['GET'])
 def get_blocks():
+    global blockchain
     # communicate blockchain to other nodes
     chain_to_send = blockchain
     for block in chain_to_send:
