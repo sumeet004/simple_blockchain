@@ -36,6 +36,7 @@ curl -X GET -H "Content-Type: application/json" http://localhost:8060/mine
 ```
 
 To send a transaction to the node:
+
 (Linux/UNIX)
 ```bash
 curl -X POST -H "Content-Type: application/json" -d "{'to':'you',
