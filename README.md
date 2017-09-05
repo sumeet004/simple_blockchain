@@ -8,10 +8,10 @@ This repo was inspired by [Satoshi Nakamoto's blockchain whitepaper](https://bit
 ### Implementation
 
 #### Blocks!
-A block is an object that contains, in this implementation, a series of transactional data. All previous transactions are available in a public ledger called the blockchain. A blockchain is a sequence of blocks available for inspection. Thus the integrity of the whole system can be determined to be secure by using a mathematical function to confirm the validity of each block all the way back to the first block. The validity of the blocks is determined by using a Proof of Work algorithm. More on that later.
+A block is an object that contains, in this implementation, a series of transactional data. All previous transactions are available in a ledger called the blockchain. A blockchain is a sequence of blocks agreed upon by a network of workers. Thus the integrity of the whole system can be verified by using a mathematical function in which the answer is difficult to obtain but easy to check. This mathematical check can be performed on each block all the way back to the first block. The validity of the blocks is determined by using a Proof of Work algorithm. More on that later.
 
 #### Nodes
-Upon startup, nodes check for peers and their respective blockchains. If no peers are found, an initial block is created.
+Upon startup, nodes check for peers and their respective blockchains. If no peers are found, an initial block is created. A node can process a transaction, mine, and return the blockchain upon request.
 
 #### Consensus Algorithm
 A blockchain is decided to be the master chain by evaluating lengths of other nodes' blockchains. The longest chain is decided to be the master blockchain. More complex consensus algorithms consensus algorithms can be implemented. For example, the longest chain with all transactions verified could be selected.
