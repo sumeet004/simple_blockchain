@@ -27,18 +27,25 @@ Change `PORT` and `peer_nodes` in `node.py` to launch more nodes. Communication 
 
 To retrieve the existing blockchain from a node:
 ```bash
-curl -X GET -H "Content-Type: application/json" http://localhost:80/blocks
+curl -X GET -H "Content-Type: application/json" http://localhost:8060/blocks
 ```
 
 To run the mining process and generate Blocks:
 ```bash
-curl -X GET -H "Content-Type: application/json" http://localhost:80/mine
+curl -X GET -H "Content-Type: application/json" http://localhost:8060/mine
 ```
 
 To send a transaction to the node:
+(Linux/UNIX)
 ```bash
 curl -X POST -H "Content-Type: application/json" -d "{'to':'you',
-  'from':'me','amount':10}" http://localhost:80/transaction
+  'from':'me','amount':10}" http://localhost:8060/transaction
+```
+
+(Windows)
+```bash
+curl -X POST -H "Content-Type: application/json" -d "{\"to\":\"you\",
+  \"from\":\"me\",\"amount\":10}" http://localhost:8060/transaction
 ```
 
 ---

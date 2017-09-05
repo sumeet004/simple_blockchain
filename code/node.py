@@ -10,16 +10,16 @@ from block import Block
 # --------------------------------------------------------
 #  node-specific data
 this_nodes_transactions = []
-PORT = 80
-peer_nodes = ["http://localhost:90"]
+PORT = 8060
+peer_nodes = ["http://localhost:8090"]
 miner_address = 'http://localhost:' + str(PORT)
 
 # --------------------------------------------------------
-# private functions
+# "private" functions
 def _proof_of_work(previous_hash):
-    # check hash validity
     nonce = None
     incrementor = 0
+    NUM_ZEROES = 5
     while not nonce:
         sha = hashlib.sha256()
         sha.update(
@@ -27,15 +27,14 @@ def _proof_of_work(previous_hash):
             str(incrementor).encode('utf-8')
             )
         challenge_hash = sha.hexdigest()
-        if str(challenge_hash[:5]) == '00000':
+        if str(challenge_hash[:NUM_ZEROES]) == '0'*NUM_ZEROES:
             nonce = incrementor
         else:
             incrementor += 1
     return nonce
 
 def _find_new_chains():
-    """
-    Find other chains.
+    """Find other chains.
 
     Except
         ConnectionError : on request failure
@@ -54,8 +53,7 @@ def _find_new_chains():
     return other_chains
 
 def _consensus():
-    """
-    Called on server start. Looks for alternative blockchains from
+    """Called on server start. Looks for alternative blockchains from
         members of `peer_nodes`.
     """
     other_chains = _find_new_chains()
@@ -84,8 +82,7 @@ def transaction():
 
 @node.route('/mine', methods=['GET'])
 def mine():
-    """
-    Mining API code.
+    """Mining API code.
 
     Raises
         ValueError : when `mine()` is called on an empty `blockchain`
@@ -122,11 +119,15 @@ def mine():
     blockchain.append(mined_block_data)
 
     # inform client of mining's completion
-    return json.dumps(mined_block_data)
+    mined = json.dumps(mined_block_data)
+    print(mined+'\n')
+    return mined
 
 @node.route('/blocks', methods=['GET'])
 def get_blocks():
-     return json.dumps(blockchain)
+    blocks = json.dumps(blockchain)
+    print(blocks+'\n')
+    return json.dumps(blocks)
 
 # --------------------------------------------------------
 # server initialization details
@@ -135,7 +136,7 @@ blockchain = _consensus()
 if not blockchain:
     def create_initial_block():
         b = Block(index=0, timestamp=str(datetime.datetime.now()),
-            data={'note':'initial block','proof_of_work':1},
+            data='initial block',
             previous_hash='0', nonce=1)
 
         return {'index':b.index,
