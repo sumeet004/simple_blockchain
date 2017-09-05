@@ -38,7 +38,7 @@ curl -X GET -H "Content-Type: application/json" http://localhost:80/mine
 To send a transaction to the node:
 ```bash
 curl -X POST -H "Content-Type: application/json" -d "{'to':'you',
-  'from':'me','amount':10}" http://localhost:90/transaction
+  'from':'me','amount':10}" http://localhost:80/transaction
 ```
 
 ---
