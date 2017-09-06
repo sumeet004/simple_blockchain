@@ -2,6 +2,9 @@ import hashlib
 import datetime
 
 class Block:
+    """Simple block object. In this example, each block contains
+        transactional data.
+    """
     def __init__(self, index, timestamp, data, previous_hash, nonce):
         self.index = index
         self.timestamp = timestamp
@@ -11,6 +14,7 @@ class Block:
         self.hash = self.hash_block()
 
     def hash_block(self):
+        # hashes this block's data
         sha = hashlib.sha256()
         sha.update(
             str(self.index).encode('utf-8') +
