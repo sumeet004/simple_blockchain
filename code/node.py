@@ -46,7 +46,6 @@ def _find_new_chains():
     Except
         ConnectionError : on request failure
     """
-    global peer_nodes
     # retrieve other nodes' blockchains
     other_chains = []
     for node_url in peer_nodes:
@@ -123,7 +122,7 @@ def mine():
     mined_block = Block(index=_index, timestamp=_timestamp, data=_data,
         previous_hash=_previous_hash, nonce=_nonce)
     this_nodes_transactions = []
-    
+
     mined_block_data = {'index':mined_block.index,
         'timestamp':mined_block.timestamp,
         'data':mined_block.data,
@@ -141,7 +140,7 @@ def mine():
 def get_blocks():
     blocks = json.dumps(blockchain)
     print(blocks+'\n')
-    return json.dumps(blocks)
+    return blocks
 
 # --------------------------------------------------------
 # server initialization details
