@@ -8,14 +8,20 @@ import json
 from block import Block
 
 # --------------------------------------------------------
-#  node-specific data
+#  node-specific initialization parameters
 this_nodes_transactions = []
-PORT = 8060
-peer_nodes = ["http://localhost:8090"]
+PORT = 8080
+peer_nodes = [
+    "http://localhost:8060"
+    , "http://localhost:8070"
+    # , "http://localhost:8090"
+    ]
 miner_address = 'http://localhost:' + str(PORT)
 
 # --------------------------------------------------------
 # "private" functions
+# TODO: break out into another .py for legibility
+
 def _proof_of_work(previous_hash):
     """
     Uses `previous_hash` to solve for a `nonce`, where the resulting
@@ -27,6 +33,8 @@ def _proof_of_work(previous_hash):
     nonce = None
     incrementor = 0
     NUM_ZEROES = 5
+
+    # search for valid nonce by way of incrementing
     while not nonce:
         sha = hashlib.sha256()
         sha.update(
@@ -34,14 +42,14 @@ def _proof_of_work(previous_hash):
             str(incrementor).encode('utf-8')
             )
         challenge_hash = sha.hexdigest()
-        if str(challenge_hash[:NUM_ZEROES]) == '0'*NUM_ZEROES:
+        if str(challenge_hash[:NUM_ZEROES]) == '0' * NUM_ZEROES:
             nonce = incrementor
         else:
             incrementor += 1
     return nonce
 
 def _find_new_chains():
-    """Find other chains.
+    """Finds other chains, using `peer_nodes`.
 
     Except
         ConnectionError : on request failure
@@ -59,13 +67,13 @@ def _find_new_chains():
     return other_chains
 
 def _consensus():
-    """Called on server start. Looks for alternative blockchains from
-        members of `peer_nodes`.
+    """Called on server start. Looks for alternative blockchains.
 
     Returns
         chain_to_return : list, determined to be strongest valid blockchain
     """
     other_chains = _find_new_chains()
+    # initialize an empty chain, in case consensus criteria is not met
     chain_to_return = []
     if other_chains:
         for chain in other_chains:
@@ -84,7 +92,7 @@ def transaction():
 
     json : {"to":"some_address","from":"my_address","amount":3}
     """
-    # TODO: broadcast to other nodes
+    # TODO: verify tx and broadcast to other nodes
     if request.method == 'POST':
         new_transaction = request.get_json()
         this_nodes_transactions.append(new_transaction)
@@ -105,8 +113,11 @@ def mine():
 
     # verifies non-empty blockchain
     if not blockchain:
-        msg = "Nothing to mine. Empty blockchain."
+        msg = "Empty blockchain."
         raise ValueError(msg)
+    # if not this_nodes_transactions:
+    #     msg = "Empty transaction list."
+    #     raise ValueError(msg)
 
     last_block = blockchain[len(blockchain) - 1]
     # perform proof of work function
