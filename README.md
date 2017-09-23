@@ -1,5 +1,5 @@
 # simple_blockchain
-A minimalist implementation of a transnational blockchain.
+A minimalist implementation of a Nakamoto transnational blockchain.
 
 This repo was inspired by [Satoshi Nakamoto's blockchain whitepaper](https://bitcoin.org/bitcoin.pdf) and [Aunyks's tiny blockchain implementation in Python](https://gist.github.com/aunyks/47d157f8bc7d1829a729c2a6a919c173).
 
