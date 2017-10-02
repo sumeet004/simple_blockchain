@@ -1,5 +1,5 @@
 # simple_blockchain
-A minimalist implementation of a Nakamoto transnational blockchain.
+A minimalist implementation of a Nakamoto transactional blockchain.
 
 This repo was inspired by [Satoshi Nakamoto's blockchain whitepaper](https://bitcoin.org/bitcoin.pdf) and [Aunyks's tiny blockchain implementation in Python](https://gist.github.com/aunyks/47d157f8bc7d1829a729c2a6a919c173).
 
@@ -14,7 +14,7 @@ A block is an object that contains, in this implementation, a series of transact
 Upon startup, nodes check for peers and their respective blockchains. If no peers are found, an initial block is created. A node can process a transaction, mine, and return the blockchain upon request.
 
 #### Consensus Algorithm
-A blockchain is decided to be the master chain by evaluating lengths of other nodes' blockchains. The longest chain is decided to be the master blockchain. I plan to implement the consensus algorithm outlined in Nakamoto's paper which seeks the longest chain with the greatest proof of work. 
+A blockchain is decided to be the master chain by evaluating lengths of other nodes' blockchains. The longest chain is decided to be the master blockchain. I plan to implement the consensus algorithm outlined in Nakamoto's paper which seeks the longest chain with the greatest proof of work.
 
 #### Mining
 Mining from a node is a transactional relationship where the miner is rewarded for completing a very simple, yet verifiable mathematical task. Similar to the Proof of Work outlined in Nakamoto's whitepaper, this implementation requires a hash be created with a specified number of leading zero bits. This hash is a result of passing a string, made by concatenating a Block's previous hash and a nonce (the constant the miner is solving for), through the SHA256 hashing function. Once the nonce is solved for, the miner is rewarded and a new block is generated.   
