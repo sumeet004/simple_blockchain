@@ -34,7 +34,7 @@ def _proof_of_work(previous_hash):
     incrementor = 0
     NUM_ZEROES = 5
 
-    # search for valid nonce by way of incrementing
+    # increment nonce until solution is found
     while not nonce:
         sha = hashlib.sha256()
         sha.update(
@@ -51,6 +51,9 @@ def _proof_of_work(previous_hash):
 def _find_new_chains():
     """Finds other chains, using `peer_nodes`.
 
+    Returns
+        other_chains : list of blockchains to be checked for validity
+
     Except
         ConnectionError : on request failure
     """
@@ -58,7 +61,6 @@ def _find_new_chains():
     other_chains = []
     for node_url in peer_nodes:
         try:
-            # blockchain
             block = requests.get(node_url + "/blocks").content
             block = json.loads(block)
             other_chains.append(block)
