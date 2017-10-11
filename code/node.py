@@ -98,7 +98,8 @@ def transaction():
     if request.method == 'POST':
         new_transaction = request.get_json()
         this_nodes_transactions.append(new_transaction)
-        print("FROM: {}".format(new_transaction['from'].encode('ascii','replace')))
+        print("FROM: {}".format(new_transaction['from'].encode('ascii',
+                                                                'replace')))
         print("TO: {}".format(new_transaction['to'].encode('ascii','replace')))
         print("AMOUNT: {}\n".format(new_transaction['amount']))
         return '~ transaction successful ~'
