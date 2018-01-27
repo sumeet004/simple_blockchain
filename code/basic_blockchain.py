@@ -34,6 +34,10 @@ class Blockchain:
 
 
     def create_genesis_block(self):
+        '''
+        Creates the genesis block. Seperate routine due to the genesis block
+            creation being a one-off event.
+        '''
         b = Block(index=0,
             timestamp=str(datetime.datetime.now()),
             data='genesis block',
@@ -45,12 +49,19 @@ class Blockchain:
 
 
     def write_to_chain(self, block_dictionary):
+        '''
+        Writes a dictionary to json, appends the json to the blockchain
+            text file.
+        '''
         with open(self.chainfile, 'a') as f:
             f.write(json.dumps(block_dictionary) + '\n')
             f.close()
 
 
     def create_new_block(self):
+        '''
+        Creates a block using the data in `self.data`.
+        '''
         with open(self.chainfile, 'r') as f:
             previous_block = f.readlines()[-1]
             previous_block = json.loads(previous_block)
@@ -69,13 +80,20 @@ class Blockchain:
             num_zeroes=number_of_leading_zeroes)
 
         self.write_to_chain(self.block.get_block_data())
+        self.data = []
 
 
     def add_data_to_block(self, new_data):
+        '''
+        Appends data to the newest block.
+        '''
         self.data.append(str(new_data))
 
 
     def validate_chain(self):
+        '''
+        Checks the chain for validity. Returns True on validation.
+        '''
         with open(self.chainfile, 'r') as f:
             lines = f.readlines()
             f.close()
@@ -92,20 +110,23 @@ class Blockchain:
                 str(nonce).encode('utf-8')
                 )
             challenge_hash = sha.hexdigest()
-            if str(challenge_hash[:number_of_zeroes]) == "0" * number_of_zeroes:
-                print('yay')
-            else:
-                print('nooo')
+
+            if str(challenge_hash[:number_of_zeroes]) != "0" * number_of_zeroes:
+                msg = 'Invalid chain.'
+                raise ValueError(msg)
+
+            return True
 
 
 
 
 if __name__ == '__main__':
     b = Blockchain()
-    b.add_data_to_block('test_test_test')
-    b.add_data_to_block('123345')
-    b.create_new_block()
-    b.validate_chain()
+    for i in range(10):
+        b.add_data_to_block('test_test_test')
+        b.add_data_to_block('123345')
+        b.add_data_to_block(i)
+        b.create_new_block()
 
 
 # # perform proof of work function
