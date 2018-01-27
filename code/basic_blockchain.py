@@ -119,12 +119,7 @@ class Blockchain:
             return True
 
 
-
-
 if __name__ == '__main__':
     b = Blockchain()
-    for i in range(10):
-        b.add_data_to_block('test_test_test')
-        b.add_data_to_block('123345')
-        b.add_data_to_block(i)
-        b.create_new_block()
+    b.add_data_to_block('this is some data!')
+    b.create_new_block()
