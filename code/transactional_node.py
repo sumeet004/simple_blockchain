@@ -1,3 +1,7 @@
+"""
+A minimalist implementation of a Nakamoto transactional blockchain.
+"""
+
 from flask import Flask
 from flask import request
 import datetime
@@ -5,6 +9,7 @@ import requests
 import hashlib
 from requests.exceptions import ConnectionError
 import json
+
 from resources.block import Block
 from resources.helper import _proof_of_work
 

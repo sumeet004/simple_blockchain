@@ -1,6 +1,4 @@
 # simple_blockchain
-A minimalist implementation of a Nakamoto transactional blockchain.
-
 This repo was inspired by [Satoshi Nakamoto's blockchain whitepaper](https://bitcoin.org/bitcoin.pdf) and [Aunyks's tiny blockchain implementation in Python](https://gist.github.com/aunyks/47d157f8bc7d1829a729c2a6a919c173).
 
 ---
@@ -37,57 +35,3 @@ result of passing a string, made by concatenating a Block's previous hash and a
 nonce (the constant the miner is solving for), through the SHA256 hashing
 function. Once the nonce is solved for, the miner is rewarded and a new block is
 generated.   
-
----
-
-### Use
-
-Change `PORT` and `peer_nodes` in `node.py` to launch more nodes. Communication
-of transactions between nodes has not been implemented yet.
-
-To retrieve the existing blockchain from a node:
-```bash
-curl -X GET -H "Content-Type: application/json" http://localhost:8060/blocks
-```
-
-To run the mining process and generate Blocks:
-```bash
-curl -X GET -H "Content-Type: application/json" http://localhost:8060/mine
-```
-
-To send a transaction to the node:
-
-(Linux/UNIX)
-```bash
-curl -X POST -H "Content-Type: application/json" -d "{'to':'you',
-  'from':'me','amount':10}" http://localhost:8060/transaction
-```
-
-(Windows)
-```bash
-curl -X POST -H "Content-Type: application/json" -d "{\"to\":\"you\",
-  \"from\":\"me\",\"amount\":10}" http://localhost:8060/transaction
-```
-
----
-
-### Future plans and other details
-
-I plan to learn much more about the fundamentals of blockchain by way of
-implementation. This repo began as a side project in a private repository. After
-making some initial headway, I figured some people may be interested in Python
-blockchains.
-
-Constructive criticism and questions are welcomed! This implementation is far
-from perfect; I will be refactoring and optimizing as time allows.
-
-Aside from built-in Python packages, such as `json`, this implementation
-requires:
-- flask
-- requests
-- datetime
-
-Install dependencies with:
-```bash
-pip install -r requirements.txt
-```
