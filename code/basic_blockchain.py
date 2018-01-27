@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 An implementation of a lightweight, centralized blockchain to store any kind of
     data.
@@ -52,7 +53,7 @@ class Blockchain:
             data='genesis block',
             previous_hash='0',
             nonce=1,
-            num_zeroes=0)
+            num_zeros=0)
 
         self._write_to_chain(b.get_block_data())
 
@@ -79,14 +80,14 @@ class Blockchain:
         index = previous_block['index'] + 1
         previous_hash = previous_block['hash']
         timestamp = str(datetime.datetime.now())
-        nonce, number_of_leading_zeroes = proof_of_work(previous_hash)
+        nonce, number_of_leading_zeros = proof_of_work(previous_hash)
 
         self.block = Block(index=index,
             timestamp=timestamp,
             data=self.data,
             previous_hash=previous_hash,
             nonce=nonce,
-            num_zeroes=number_of_leading_zeroes)
+            num_zeros=number_of_leading_zeros)
 
         self._write_to_chain(self.block.get_block_data())
         self.data = []
@@ -99,6 +100,23 @@ class Blockchain:
         self.data.append(str(new_data))
 
 
+    def _return_hash(self, previous_hash, nonce):
+        sha = hashlib.sha256()
+        sha.update(
+            str(previous_hash).encode('utf-8') +
+            str(nonce).encode('utf-8')
+            )
+        return sha.hexdigest()
+
+
+    def _validate_hash(self, _hash, num_zeros):
+        if str(_hash[:num_zeros]) != "0" * num_zeros:
+            msg = 'Invalid chain.'
+            raise ValueError(msg)
+        else:
+            return True
+
+
     def validate_chain(self):
         '''
         Checks the chain for validity. Returns True on validation.
@@ -109,25 +127,18 @@ class Blockchain:
 
         for line in lines:
             block_to_validate = json.loads(line)
-            number_of_zeroes = block_to_validate['num_zeroes']
+            number_of_zeros = block_to_validate['num_zeros']
             nonce = block_to_validate['nonce']
             previous_hash = block_to_validate['previous_hash']
 
-            sha = hashlib.sha256()
-            sha.update(
-                str(previous_hash).encode('utf-8') +
-                str(nonce).encode('utf-8')
-                )
-            challenge_hash = sha.hexdigest()
+            _hash = self._return_hash(previous_hash, nonce)
+            self._validate_hash(_hash, number_of_zeros)
 
-            if str(challenge_hash[:number_of_zeroes]) != "0" * number_of_zeroes:
-                msg = 'Invalid chain.'
-                raise ValueError(msg)
-
-            return True
+        return True
 
 
 if __name__ == '__main__':
     b = Blockchain()
-    b.add_data_to_block('this is some data!')
-    b.create_new_block()
+    # b.add_data_to_block('this is some data!')
+    # b.create_new_block()
+    b.validate_chain()

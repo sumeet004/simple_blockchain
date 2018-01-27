@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 A minimalist implementation of a Nakamoto transactional blockchain.
 """
