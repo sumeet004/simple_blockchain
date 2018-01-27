@@ -1,3 +1,7 @@
+"""
+An implementation of a lightweight, centralized blockchain to store any kind of
+    data.
+"""
 __author__ = '@drewrice2'
 
 import os
@@ -7,6 +11,10 @@ import datetime
 
 from resources.block import Block
 from resources.helper import proof_of_work
+
+
+# TODO: s3 integration for blockchain.txt
+# TODO: implement multi-file blockchain support
 
 
 CHAIN_NAME = 'baby_chain.txt'
@@ -23,7 +31,7 @@ class Blockchain:
 
         # create genesis block if chainfile is empty
         if os.stat(self.chainfile).st_size == 0:
-            self.create_genesis_block()
+            self._create_genesis_block()
 
         self.data = []
 
@@ -34,7 +42,7 @@ class Blockchain:
             f.close()
 
 
-    def create_genesis_block(self):
+    def _create_genesis_block(self):
         '''
         Creates the genesis block. Seperate routine due to the genesis block
             creation being a one-off event.
@@ -46,13 +54,13 @@ class Blockchain:
             nonce=1,
             num_zeroes=0)
 
-        self.write_to_chain(b.get_block_data())
+        self._write_to_chain(b.get_block_data())
 
 
-    def write_to_chain(self, block_dictionary):
+    def _write_to_chain(self, block_dictionary):
         '''
-        Writes a dictionary to json, appends the json to the blockchain
-            text file.
+        Writes a dictionary to json, appends the json to the blockchain text
+            file.
         '''
         with open(self.chainfile, 'a') as f:
             f.write(json.dumps(block_dictionary) + '\n')
@@ -80,7 +88,7 @@ class Blockchain:
             nonce=nonce,
             num_zeroes=number_of_leading_zeroes)
 
-        self.write_to_chain(self.block.get_block_data())
+        self._write_to_chain(self.block.get_block_data())
         self.data = []
 
 
