@@ -5,7 +5,9 @@ import requests
 import hashlib
 from requests.exceptions import ConnectionError
 import json
-from block import Block
+from resources.block import Block
+from resources.helper import _proof_of_work
+
 
 # --------------------------------------------------------
 #  node-specific initialization parameters
@@ -18,35 +20,10 @@ peer_nodes = [
     ]
 miner_address = 'http://localhost:' + str(PORT)
 
+
 # --------------------------------------------------------
 # "private" functions
 # TODO: break out into another .py for legibility
-
-def _proof_of_work(previous_hash):
-    """
-    Uses `previous_hash` to solve for a `nonce`, where the resulting
-        hash starts with a number of zero bits ( NUM_ZEROES ).
-
-    Returns
-        nonce : int
-    """
-    nonce = None
-    incrementor = 0
-    NUM_ZEROES = 5
-
-    # search for valid nonce by way of incrementing
-    while not nonce:
-        sha = hashlib.sha256()
-        sha.update(
-            str(previous_hash).encode('utf-8') +
-            str(incrementor).encode('utf-8')
-            )
-        challenge_hash = sha.hexdigest()
-        if str(challenge_hash[:NUM_ZEROES]) == '0' * NUM_ZEROES:
-            nonce = incrementor
-        else:
-            incrementor += 1
-    return nonce
 
 def _find_new_chains():
     """Finds other chains, using `peer_nodes`.
@@ -66,6 +43,7 @@ def _find_new_chains():
             pass
     return other_chains
 
+
 def _consensus():
     """Called on server start. Looks for alternative blockchains.
 
@@ -81,6 +59,7 @@ def _consensus():
                 chain_to_return = chain
     # longest chain wins!
     return chain_to_return
+
 
 # --------------------------------------------------------
 # REST API
@@ -100,6 +79,7 @@ def transaction():
         print("TO: {}".format(new_transaction['to'].encode('ascii','replace')))
         print("AMOUNT: {}\n".format(new_transaction['amount']))
         return '~ transaction successful ~'
+
 
 @node.route('/mine', methods=['GET'])
 def mine():
@@ -147,11 +127,13 @@ def mine():
     print(mined+'\n')
     return mined
 
+
 @node.route('/blocks', methods=['GET'])
 def get_blocks():
     blocks = json.dumps(blockchain)
     print(blocks+'\n')
     return blocks
+
 
 # --------------------------------------------------------
 # server initialization details
