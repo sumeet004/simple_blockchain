@@ -1,6 +1,7 @@
 """
 A minimalist implementation of a Nakamoto transactional blockchain.
 """
+__author__ = '@drewrice2'
 
 from flask import Flask
 from flask import request
@@ -11,7 +12,7 @@ from requests.exceptions import ConnectionError
 import json
 
 from resources.block import Block
-from resources.helper import _proof_of_work
+from resources.helper import proof_of_work
 
 
 # --------------------------------------------------------
@@ -110,7 +111,7 @@ def mine():
     last_block = blockchain[len(blockchain) - 1]
     # perform proof of work function
     _previous_hash = last_block['hash']
-    _nonce = _proof_of_work(_previous_hash)
+    _nonce = proof_of_work(_previous_hash)
     # reward miner
     this_nodes_transactions.append( {'from':'network', 'to':miner_address,
         'amount':MINER_REWARD} )
@@ -150,7 +151,7 @@ blockchain = _consensus()
 if not blockchain:
     def create_initial_block():
         b = Block(index=0, timestamp=str(datetime.datetime.now()),
-            data='initial block',
+            data='genesis block',
             previous_hash='0', nonce=1)
 
         return {'index':b.index,
