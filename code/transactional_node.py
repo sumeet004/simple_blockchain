@@ -28,6 +28,9 @@ miner_address = 'http://localhost:' + str(PORT)
 def _find_new_chains():
     """Finds other chains, using `peer_nodes`.
 
+    Returns
+        other_chains : list of blockchains to be checked for validity
+
     Except
         ConnectionError : on request failure
     """
@@ -35,7 +38,6 @@ def _find_new_chains():
     other_chains = []
     for node_url in peer_nodes:
         try:
-            # blockchain
             block = requests.get(node_url + "/blocks").content
             block = json.loads(block)
             other_chains.append(block)
@@ -75,7 +77,8 @@ def transaction():
     if request.method == 'POST':
         new_transaction = request.get_json()
         this_nodes_transactions.append(new_transaction)
-        print("FROM: {}".format(new_transaction['from'].encode('ascii','replace')))
+        print("FROM: {}".format(new_transaction['from'].encode('ascii',
+                                                                'replace')))
         print("TO: {}".format(new_transaction['to'].encode('ascii','replace')))
         print("AMOUNT: {}\n".format(new_transaction['amount']))
         return '~ transaction successful ~'
