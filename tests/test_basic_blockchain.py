@@ -1,12 +1,15 @@
 #!/usr/bin/env python
-
+"""
+Basic tests for some of the blockchain code.
+"""
+__author__ = '@drewrice2'
 
 import unittest
+import json
 import sys
 import os
 
 import path_magic
-
 from basic_blockchain import Blockchain
 from resources.helper import proof_of_work
 
@@ -19,6 +22,17 @@ class TestUM(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+
+    def test_validate_hash(self):
+        h = '000006'
+        nonce = '725237'
+        num_zeros = 5
+
+        passing_zeros = num_zeros
+        failing_zeros = num_zeros + 1
+        self.assertTrue(self.b._validate_hash(h, passing_zeros))
+        self.assertRaises(ValueError, self.b._validate_hash, h, failing_zeros)
 
 
     def test_return_hash(self):
@@ -43,6 +57,37 @@ class TestUM(unittest.TestCase):
         _nonce, _num_zeros = proof_of_work(h, num_zeros)
         self.assertEqual(_nonce, nonce)
         self.assertNotEqual(_nonce+1, nonce)
+
+
+    def test_write_to_chain(self):
+        test_dict = {"test_data":"check123"}
+
+        def test_dict_exists_in_chain(test_dict):
+            with open(self.b.chainfile, 'r') as f:
+                lines = f.readlines()
+                for line in lines:
+                    if line == json.dumps(test_dict)+'\n':
+                        return True
+                return False
+
+        # validate test dict isn't in blockchain
+        self.assertFalse(test_dict_exists_in_chain(test_dict))
+
+        # write to chain
+        self.b._write_to_chain(test_dict)
+        self.assertTrue(test_dict_exists_in_chain(test_dict))
+
+        def delete_last_line():
+            # read into memory
+            with open(self.b.chainfile) as f:
+                lines = f.readlines()
+            # remove last line
+            with open(self.b.chainfile,'w') as w:
+                w.writelines([item for item in lines[:-1]])
+
+        delete_last_line()
+        # validate test dict isn't in blockchain
+        self.assertFalse(test_dict_exists_in_chain(test_dict))
 
 
 if __name__ == '__main__':

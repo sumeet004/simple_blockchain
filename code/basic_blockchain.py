@@ -117,11 +117,13 @@ class Blockchain:
             return True
 
 
-    def validate_chain(self):
+    def validate_chain(self, chain=''):
         '''
         Checks the chain for validity. Returns True on validation.
         '''
-        with open(self.chainfile, 'r') as f:
+        if not chain:
+            chain = self.chainfile
+        with open(chain, 'r') as f:
             lines = f.readlines()
             f.close()
 
