@@ -110,7 +110,7 @@ class Blockchain:
 
 
     def _validate_hash(self, _hash, num_zeros):
-        if str(_hash[:num_zeros]) != "0" * num_zeros: # proof of work validation
+        if str(_hash[:num_zeros]) != "0" * num_zeros: # checks for leading zeros
             msg = 'Invalid chain.'
             raise ValueError(msg)
         else:
@@ -121,17 +121,29 @@ class Blockchain:
         '''
         Checks the chain for validity. Returns True on validation.
         '''
+        num_of_indexes_at_0 = 0
+
         if not chain:
             chain = self.chainfile
+
         with open(chain, 'r') as f:
             for line in f:
                 block_to_validate = json.loads(line)
+
                 number_of_zeros = block_to_validate['num_zeros']
                 nonce = block_to_validate['nonce']
                 previous_hash = block_to_validate['previous_hash']
+                index = block_to_validate['index']
+
+                if index == 0:
+                    num_of_indexes_at_0 += 1
 
                 _hash = self._return_hash(previous_hash, nonce)
                 self._validate_hash(_hash, number_of_zeros)
+
+        if num_of_indexes_at_0 > 1:
+            msg = 'Multiple genesis blocks.'
+            raise ValueError(msg)
 
         return True
 
@@ -141,3 +153,5 @@ if __name__ == '__main__':
     # b.add_data_to_block('this is some data!')
     # b.create_new_block()
     b.validate_chain()
+    print('baba')
+    print(b.chainfile)

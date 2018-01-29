@@ -60,7 +60,11 @@ class TestUM(unittest.TestCase):
 
 
     def test_write_to_chain(self):
-        test_dict = {"test_data":"check123"}
+        chainfile = 'chain_blank.txt'
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        self.b.chainfile = os.path.join(dir_path, 'test_data', chainfile)
+
+        test_dict = {"test_data": "check123"}
 
         def test_dict_exists_in_chain(test_dict):
             with open(self.b.chainfile, 'r') as f:
@@ -88,6 +92,15 @@ class TestUM(unittest.TestCase):
         delete_last_line()
         # validate test dict isn't in blockchain
         self.assertFalse(test_dict_exists_in_chain(test_dict))
+
+
+    def test_multiple_blocks_at_index_0(self):
+        chainfile = 'chain_multiple_index_zero.txt'
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        self.b.chainfile = os.path.join(dir_path, 'test_data', chainfile)
+
+        self.assertRaises(ValueError, self.b.validate_chain)
+
 
 
 if __name__ == '__main__':
