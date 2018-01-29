@@ -34,6 +34,7 @@ class Blockchain:
         if os.stat(self.chainfile).st_size == 0:
             self._create_genesis_block()
 
+        self.validate_chain()
         self.data = []
 
 
@@ -124,14 +125,11 @@ class Blockchain:
         if not chain:
             chain = self.chainfile
         with open(chain, 'r') as f:
-            lines = f.readlines()
-            f.close()
-
-        for line in lines:
-            block_to_validate = json.loads(line)
-            number_of_zeros = block_to_validate['num_zeros']
-            nonce = block_to_validate['nonce']
-            previous_hash = block_to_validate['previous_hash']
+            for line in f:
+                block_to_validate = json.loads(line)
+                number_of_zeros = block_to_validate['num_zeros']
+                nonce = block_to_validate['nonce']
+                previous_hash = block_to_validate['previous_hash']
 
             _hash = self._return_hash(previous_hash, nonce)
             self._validate_hash(_hash, number_of_zeros)
