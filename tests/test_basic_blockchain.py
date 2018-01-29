@@ -18,6 +18,8 @@ class TestUM(unittest.TestCase):
 
     def setUp(self):
         self.b = Blockchain()
+        self.dir_path = os.path.dirname(os.path.realpath(__file__))
+
 
 
     def tearDown(self):
@@ -61,8 +63,7 @@ class TestUM(unittest.TestCase):
 
     def test_write_to_chain(self):
         chainfile = 'chain_blank.txt'
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        self.b.chainfile = os.path.join(dir_path, 'test_data', chainfile)
+        self.b.chainfile = os.path.join(self.dir_path, 'test_data', chainfile)
 
         test_dict = {"test_data": "check123"}
 
@@ -96,22 +97,19 @@ class TestUM(unittest.TestCase):
 
     def test_multiple_blocks_at_index_0(self):
         chainfile = 'chain_multiple_index_zero.txt'
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        self.b.chainfile = os.path.join(dir_path, 'test_data', chainfile)
+        self.b.chainfile = os.path.join(self.dir_path, 'test_data', chainfile)
 
         self.assertRaises(ValueError, self.b.validate_chain)
 
 
     def test_correct_previous_hash(self):
         chainfile = 'chain_valid.txt'
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        self.b.chainfile = os.path.join(dir_path, 'test_data', chainfile)
+        self.b.chainfile = os.path.join(self.dir_path, 'test_data', chainfile)
 
         self.assertTrue(self.b.validate_chain())
 
         chainfile = 'chain_incorrect_previous_hash.txt'
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        self.b.chainfile = os.path.join(dir_path, 'test_data', chainfile)
+        self.b.chainfile = os.path.join(self.dir_path, 'test_data', chainfile)
 
         self.assertRaises(ValueError, self.b.validate_chain)
 
