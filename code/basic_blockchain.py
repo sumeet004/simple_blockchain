@@ -141,7 +141,7 @@ class Blockchain:
                 else:
                     if not _hash == previous_hash:
                         msg = 'Incorrect hashes. Broken chain.'
-                        raise ValueError
+                        raise ValueError(msg)
 
                 _hash = block_to_validate['hash']
                 _hash_to_validate = self._return_hash(previous_hash, nonce)
