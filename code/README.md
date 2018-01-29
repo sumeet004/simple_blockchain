@@ -1,60 +1,24 @@
 ## basic_blockchain.py
 
-This code is an implementation of a lightweight, centralized blockchain. The
-goal of this code to show an example of a blockchain to store any kind of data.
+This code is an implementation of a lightweight blockchain. In this current
+state, the blockchain should be able to store any kind of text data.
 
-## transactional_node.py
+On instantiation, the Blockchain object will:
+1. Create an empty chainfile with a genesis block if it cannot find one in
+`code/chain/`.
+2. Run `self.validate_chain()` and confirm the existing chain is valid
 
-A minimalist implementation of a Nakamoto transactional blockchain.
+This code assumes:
+- The blockchain exists in a text file ( in `code/chain/` ).
+- Only one block may have an index of "0". This is called the genesis block.
+- Hashes are stored sequentially, in json form.
 
-### Use
+#### TODOs
+There are a few things that could greatly improve usage.
 
-Change `PORT` and `peer_nodes` in `node.py` to launch more nodes. Communication
-of transactions between nodes has not been implemented yet.
+I would like to implement a better data storage format than appending data
+in `.json` to a text file.
 
-To retrieve the existing blockchain from a node:
-```bash
-curl -X GET -H "Content-Type: application/json" http://localhost:8060/blocks
-```
-
-To run the mining process and generate Blocks:
-```bash
-curl -X GET -H "Content-Type: application/json" http://localhost:8060/mine
-```
-
-To send a transaction to the node:
-
-(Linux/UNIX)
-```bash
-curl -X POST -H "Content-Type: application/json" -d "{'to':'you',
-  'from':'me','amount':10}" http://localhost:8060/transaction
-```
-
-(Windows)
-```bash
-curl -X POST -H "Content-Type: application/json" -d "{\"to\":\"you\",
-  \"from\":\"me\",\"amount\":10}" http://localhost:8060/transaction
-```
-
----
-
-### Future plans and other details
-
-I plan to learn much more about the fundamentals of blockchain by way of
-implementation. This repo began as a side project in a private repository. After
-making some initial headway, I figured some people may be interested in Python
-blockchains.
-
-Constructive criticism and questions are welcomed! This implementation is far
-from perfect; I will be refactoring and optimizing as time allows.
-
-Aside from built-in Python packages, such as `json`, this implementation
-requires:
-- flask
-- requests
-- datetime
-
-Install dependencies with:
-```bash
-pip install -r requirements.txt
-```
+Parameterized storage would be great for extensibility. In other words, support
+for multi-file blockchains. Additionally, chainfiles stored remotely
+( in Amazon S3, for example ) would be a great addition.
