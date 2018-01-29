@@ -29,7 +29,6 @@ class Blockchain:
         self.chainfile = os.path.join(dir_path, 'chain', CHAIN_NAME)
 
         self._create_chain_if_not_exists()
-
         # create genesis block if chainfile is empty
         if os.stat(self.chainfile).st_size == 0:
             self._create_genesis_block()
@@ -111,7 +110,7 @@ class Blockchain:
 
 
     def _validate_hash(self, _hash, num_zeros):
-        if str(_hash[:num_zeros]) != "0" * num_zeros:
+        if str(_hash[:num_zeros]) != "0" * num_zeros: # proof of work validation
             msg = 'Invalid chain.'
             raise ValueError(msg)
         else:
@@ -131,8 +130,8 @@ class Blockchain:
                 nonce = block_to_validate['nonce']
                 previous_hash = block_to_validate['previous_hash']
 
-            _hash = self._return_hash(previous_hash, nonce)
-            self._validate_hash(_hash, number_of_zeros)
+                _hash = self._return_hash(previous_hash, nonce)
+                self._validate_hash(_hash, number_of_zeros)
 
         return True
 
