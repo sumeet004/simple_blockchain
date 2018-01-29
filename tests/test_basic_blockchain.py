@@ -102,6 +102,19 @@ class TestUM(unittest.TestCase):
         self.assertRaises(ValueError, self.b.validate_chain)
 
 
+    def test_correct_previous_hash(self):
+        chainfile = 'chain_valid.txt'
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        self.b.chainfile = os.path.join(dir_path, 'test_data', chainfile)
+
+        self.assertTrue(self.b.validate_chain())
+
+        chainfile = 'chain_incorrect_previous_hash.txt'
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        self.b.chainfile = os.path.join(dir_path, 'test_data', chainfile)
+
+        self.assertRaises(ValueError, self.b.validate_chain)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -132,14 +132,20 @@ class Blockchain:
 
                 number_of_zeros = block_to_validate['num_zeros']
                 nonce = block_to_validate['nonce']
-                previous_hash = block_to_validate['previous_hash']
                 index = block_to_validate['index']
+                previous_hash = block_to_validate['previous_hash']
+
 
                 if index == 0:
                     num_of_indexes_at_0 += 1
+                else:
+                    if not _hash == previous_hash:
+                        msg = 'Incorrect hashes. Broken chain.'
+                        raise ValueError
 
-                _hash = self._return_hash(previous_hash, nonce)
-                self._validate_hash(_hash, number_of_zeros)
+                _hash = block_to_validate['hash']
+                _hash_to_validate = self._return_hash(previous_hash, nonce)
+                self._validate_hash(_hash_to_validate, number_of_zeros)
 
         if num_of_indexes_at_0 > 1:
             msg = 'Multiple genesis blocks.'
@@ -153,5 +159,3 @@ if __name__ == '__main__':
     # b.add_data_to_block('this is some data!')
     # b.create_new_block()
     b.validate_chain()
-    print('baba')
-    print(b.chainfile)
