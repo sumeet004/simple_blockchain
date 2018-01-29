@@ -21,7 +21,6 @@ class TestUM(unittest.TestCase):
         self.dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
-
     def tearDown(self):
         pass
 
@@ -96,6 +95,7 @@ class TestUM(unittest.TestCase):
 
 
     def test_multiple_blocks_at_index_0(self):
+        # validate that a chainfile can only have one entry with an index of 1
         chainfile = 'chain_multiple_index_zero.txt'
         self.b.chainfile = os.path.join(self.dir_path, 'test_data', chainfile)
 
@@ -103,14 +103,14 @@ class TestUM(unittest.TestCase):
 
 
     def test_correct_previous_hash(self):
+        # valid chain test
         chainfile = 'chain_valid.txt'
         self.b.chainfile = os.path.join(self.dir_path, 'test_data', chainfile)
-
         self.assertTrue(self.b.validate_chain())
 
+        # test `hash` and `previous_hash` validation
         chainfile = 'chain_incorrect_previous_hash.txt'
         self.b.chainfile = os.path.join(self.dir_path, 'test_data', chainfile)
-
         self.assertRaises(ValueError, self.b.validate_chain)
 
 
