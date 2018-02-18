@@ -139,7 +139,6 @@ class Blockchain:
                 index = block_to_validate['index']
                 previous_hash = block_to_validate['previous_hash']
 
-
                 if index == 0:
                     num_of_indexes_at_0 += 1
                 else:
