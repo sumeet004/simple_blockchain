@@ -41,6 +41,7 @@ class Blockchain:
         if not os.path.isfile(self.chainfile):
             f = open(self.chainfile,'w')
             f.close()
+        return
 
 
     def _create_genesis_block(self):
@@ -56,6 +57,7 @@ class Blockchain:
             num_zeros=0)
 
         self._write_to_chain(b.get_block_data())
+        return
 
 
     def _write_to_chain(self, block_dictionary):
@@ -66,6 +68,7 @@ class Blockchain:
         with open(self.chainfile, 'a') as f:
             f.write(json.dumps(block_dictionary) + '\n')
             f.close()
+        return
 
 
     def create_new_block(self):
@@ -91,6 +94,7 @@ class Blockchain:
 
         self._write_to_chain(self.block.get_block_data())
         self.data = []
+        return
 
 
     def add_data_to_block(self, new_data):
